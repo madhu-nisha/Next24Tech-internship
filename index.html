@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Leaf Detection</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        
+        .header {
+            margin-top: 20px;
+            margin-bottom: 50px;
+            font-size: 2.8em;
+            color: #2d4059;
+        }
+        
+        .container {
+            width: 40%;
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .upload-section h2 {
+            color: #1d3557;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+        
+        .upload-section p {
+            color: #757575;
+            font-size: 0.9em;
+            margin-bottom: 30px;
+        }
+        
+        input[type="file"] {
+            padding: 10px;
+            background-color: #e9ecef;
+            border: 2px dashed #1d3557;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 20px;
+            width: 80%;
+        }
+        
+        button {
+            padding: 12px 25px;
+            background-color: #457b9d;
+            color: white;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #1d3557;
+        }
+        
+        .result-container {
+            margin-top: 30px;
+            background-color: #f0f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            font-size: 1.1em;
+            text-align: center;
+        }
+        
+        footer {
+            margin-top: 40px;
+        }
+        
+        footer p {
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">Plant Leaf Detection</div>
+    
+    <div class="container">
+        <section class="upload-section">
+            <h2>Upload Leaf Image</h2>
+            <p>Select an image file to detect the plant leaf type or disease.</p>
+            <form id="predictionForm" enctype="multipart/form-data">
+                <input type="file" id="fileInput" name="file" accept="image/*" required>
+                <button type="submit">Predict</button>
+            </form>
+        </section>
+        
+        <div id="result" class="result-container"></div>
+    </div>
+    
+    <footer>
+        <p>Developed as part of an internship project.</p>
+    </footer>
+    
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const fileInput = document.getElementById('fileInput').files[0];
+            const formData = new FormData();
+            formData.append('file', fileInput);
+
+            fetch('/Predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = 'Prediction: ' + data.prediction;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'Error: Could not get prediction.';
+            });
+        });
+    </script>
+</body>
+
+</html>
